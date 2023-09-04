@@ -12,7 +12,7 @@ spring:
       #基本属性
       url: jdbc:mysql://127.0.0.1:3306/lu_tale?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT
       username: root
-      password: 123123
+      password: 123456
       #配置初始化大小/最小/最大
       initial-size: 1
       min-idle: 1

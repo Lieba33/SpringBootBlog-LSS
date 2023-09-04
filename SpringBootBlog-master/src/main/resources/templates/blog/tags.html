@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorator="blog/layout" th:with="title='标签 |',active='tabs'">
+      layout:decorator="blog/layout" th:with="title='标签 |',active='tags'">
 <header th:replace="blog/layout::headerFragment(${title},${active})"></header>
 <body>
 <div layout:fragment="content">

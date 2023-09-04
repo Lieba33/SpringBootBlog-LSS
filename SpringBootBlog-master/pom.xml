@@ -190,6 +190,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.6.13</version>
                 <!--打jar包启动类-->
                 <configuration>
                     <mainClass>com.wip.MyBlogApplication</mainClass>

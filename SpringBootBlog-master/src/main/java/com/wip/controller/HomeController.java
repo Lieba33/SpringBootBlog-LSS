@@ -81,6 +81,22 @@ public class HomeController extends BaseController {
         return "blog/archives";
     }
 
+    @ApiOperation("教程内容页")
+    @GetMapping(value = "/course")
+    public String course(
+            HttpServletRequest request,
+            @ApiParam(name = "page", value = "页数", required = false)
+            @RequestParam(name = "page", required = false, defaultValue = "1")
+            int page,
+            @ApiParam(name = "limit", value = "每页数量", required = false)
+            @RequestParam(name = "limit", required = false, defaultValue = "10")
+            int limit
+    ) {
+        PageInfo<ContentDomain> articles = contentService.getArticlesByCond(new ContentCond(), page, limit);
+        request.setAttribute("articles", articles);
+        return "blog/course";
+    }
+
     @ApiOperation("分类内容页")
     @GetMapping(value = "/categories")
     public String categories(HttpServletRequest request) {
