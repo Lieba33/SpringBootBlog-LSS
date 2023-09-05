@@ -7,6 +7,7 @@ import com.wip.controller.BaseController;
 import com.wip.dto.cond.ContentCond;
 import com.wip.dto.cond.MetaCond;
 import com.wip.model.ContentDomain;
+import com.wip.model.CourseDomain;
 import com.wip.model.MetaDomain;
 import com.wip.service.article.ContentService;
 import com.wip.service.log.LogService;
@@ -64,6 +65,16 @@ public class ArticleController extends BaseController {
         List<MetaDomain> metas = metaService.getMetas(metaCond);
         request.setAttribute("categories",metas);
         return "admin/article_edit";
+    }
+
+    @ApiOperation("发布新教程页")
+    @GetMapping(value = "/course")
+    public String newCourse(HttpServletRequest request) {
+        MetaCond metaCond = new MetaCond();
+        metaCond.setType(Types.CATEGORY.getType());
+        List<MetaDomain> metas = metaService.getMetas(metaCond);
+        request.setAttribute("categories",metas);
+        return "admin/course_edit";
     }
 
     @ApiOperation("文章编辑页")
@@ -136,6 +147,57 @@ public class ArticleController extends BaseController {
         return APIResponse.success();
     }
 
+    @ApiOperation("编辑保存教程")
+    @PostMapping("/modifyCourser")
+    @ResponseBody
+    public APIResponse modifyCourserArticle(
+            HttpServletRequest request,
+            @ApiParam(name = "coid", value = "教程主键", required = true)
+            @RequestParam(name = "coid", required = true)
+            Integer coid,
+            @ApiParam(name = "title", value = "标题", required = true)
+            @RequestParam(name = "title", required = true)
+            String title,
+            @ApiParam(name = "titlePic", value = "标题图片", required = false)
+            @RequestParam(name = "titlePic", required = false)
+            String titlePic,
+            @ApiParam(name = "slug", value = "内容缩略名", required = false)
+            @RequestParam(name = "slug", required = false)
+            String slug,
+            @ApiParam(name = "content", value = "内容", required = true)
+            @RequestParam(name = "content", required = true)
+            String content,
+            @ApiParam(name = "type", value = "文章类型", required = true)
+            @RequestParam(name = "type", required = true)
+            String type,
+            @ApiParam(name = "status", value = "文章状态", required = true)
+            @RequestParam(name = "status", required = true)
+            String status,
+            @ApiParam(name = "tags", value = "标签", required = false)
+            @RequestParam(name = "tags", required = false)
+            String tags,
+            @ApiParam(name = "categories", value = "分类", required = false)
+            @RequestParam(name = "categories", required = false, defaultValue = "默认分类")
+            String categories,
+            @ApiParam(name = "allowComment", value = "是否允许评论", required = true)
+            @RequestParam(name = "allowComment", required = true)
+            Boolean allowComment
+    ) {
+        CourseDomain courseDomain = new CourseDomain();
+        courseDomain.setTitle(title);
+        courseDomain.setCoid(coid);
+        courseDomain.setTitlePic(titlePic);
+        courseDomain.setSlug(slug);
+        courseDomain.setContent(content);
+        courseDomain.setType(type);
+        courseDomain.setStatus(status);
+        courseDomain.setTags(tags);
+        courseDomain.setCategories(categories);
+        courseDomain.setAllowComment(allowComment ? 1: 0);
+        contentService.updateArticleById(courseDomain);
+
+        return APIResponse.success();
+    }
 
     @ApiOperation("发布新文章")
     @PostMapping(value = "/publish")
