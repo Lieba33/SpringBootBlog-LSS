@@ -37,7 +37,7 @@ public class CourseDomain {
     /**
      * 内容文字
      */
-    private String content;
+    private String course;
     /**
      * 内容所属用户id
      */
@@ -127,12 +127,12 @@ public class CourseDomain {
         this.modified = modified;
     }
 
-    public String getContent() {
-        return content;
+    public String getCourse() {
+        return course;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setCourse(String course) {
+        this.course = course;
     }
 
     public Integer getAuthorId() {

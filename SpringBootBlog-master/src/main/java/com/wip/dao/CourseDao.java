@@ -1,19 +1,24 @@
-package com.wip.service.article;
+/**
+ * Created by IntelliJ IDEA.
+ * User: lss
+ * DateTime: 2023/9/6 9:50
+ **/
+package com.wip.dao;
 
-
-import com.github.pagehelper.PageInfo;
 import com.wip.dto.cond.CourseCond;
 import com.wip.model.CourseDomain;
-import com.wip.model.MetaDomain;
+import com.wip.model.CourseShipDomain;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
- * 教程相关Service接口
+ * 教程相关Dao接口
  */
-public interface CourseService {
-
-    /***
+@Mapper
+public interface CourseDao {
+    /**
      * 添加教程
      * @param courseDomain
      */
@@ -35,11 +40,9 @@ public interface CourseService {
     /**
      * 根据条件获取教程列表
      * @param courseCond
-     * @param page
-     * @param limit
      * @return
      */
-    PageInfo<CourseDomain> getCourseArticlesByCond(CourseCond courseCond, int page, int limit);
+    List<CourseDomain> getCourseArticleByCond(CourseCond courseCond);
 
     /**
      * 删除教程
@@ -48,24 +51,23 @@ public interface CourseService {
     void deleteCourseArticleById(Integer coid);
 
     /**
-     * 添加教程点击量
-     * @param course
+     * 获取教程总数
+     * @return
      */
-    void updateCourseByCoid(CourseDomain course);
+    Long getCourseArticleCount();
 
     /**
-     * 通过分类获取教程
+     * 通过分类名获取教程
      * @param category
      * @return
      */
-    List<CourseDomain> getCourseArticleByCategory(String category);
+    List<CourseDomain> getCourseArticleByCategory(@Param("category") String category);
 
     /**
      * 通过标签获取教程
-     * @param tags
+     * @param coid
      * @return
      */
-    List<CourseDomain> getCourseArticleByTags(MetaDomain tags);
+    List<CourseDomain> getCourseArticleByTags(List<CourseShipDomain> coid);
+
 }
-
-

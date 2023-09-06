@@ -10,6 +10,7 @@ import com.wip.model.ContentDomain;
 import com.wip.model.CourseDomain;
 import com.wip.model.MetaDomain;
 import com.wip.service.article.ContentService;
+import com.wip.service.article.CourseService;
 import com.wip.service.log.LogService;
 import com.wip.service.meta.MetaService;
 import com.wip.utils.APIResponse;
@@ -37,6 +38,9 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private ContentService contentService;
+
+    @Autowired
+    private CourseService courseService;
 
     @Autowired
     private LogService logService;
@@ -164,9 +168,9 @@ public class ArticleController extends BaseController {
             @ApiParam(name = "slug", value = "内容缩略名", required = false)
             @RequestParam(name = "slug", required = false)
             String slug,
-            @ApiParam(name = "content", value = "内容", required = true)
-            @RequestParam(name = "content", required = true)
-            String content,
+            @ApiParam(name = "course", value = "内容", required = true)
+            @RequestParam(name = "course", required = true)
+            String course,
             @ApiParam(name = "type", value = "文章类型", required = true)
             @RequestParam(name = "type", required = true)
             String type,
@@ -188,13 +192,13 @@ public class ArticleController extends BaseController {
         courseDomain.setCoid(coid);
         courseDomain.setTitlePic(titlePic);
         courseDomain.setSlug(slug);
-        courseDomain.setContent(content);
+        courseDomain.setCourse(course);
         courseDomain.setType(type);
         courseDomain.setStatus(status);
         courseDomain.setTags(tags);
         courseDomain.setCategories(categories);
         courseDomain.setAllowComment(allowComment ? 1: 0);
-        contentService.updateArticleById(courseDomain);
+        courseService.updateCourseArticleById(courseDomain);
 
         return APIResponse.success();
     }
@@ -247,6 +251,58 @@ public class ArticleController extends BaseController {
 
         // 添加文章
         contentService.addArticle(contentDomain);
+
+        return APIResponse.success();
+    }
+
+    @ApiOperation("发布新教程")
+    @PostMapping(value = "/publishCourse")
+    @ResponseBody
+    public APIResponse publishCourseArticle(
+            @ApiParam(name = "title", value = "标题", required = true)
+            @RequestParam(name = "title", required = true)
+            String title,
+            @ApiParam(name = "titlePic", value = "标题图片", required = false)
+            @RequestParam(name = "titlePic", required = false)
+            String titlePic,
+            @ApiParam(name = "slug", value = "内容缩略名", required = false)
+            @RequestParam(name = "slug", required = false)
+            String slug,
+            @ApiParam(name = "course", value = "内容", required = true)
+            @RequestParam(name = "course", required = true)
+            String course,
+            @ApiParam(name = "type", value = "文章类型", required = true)
+            @RequestParam(name = "type", required = true)
+            String type,
+            @ApiParam(name = "status", value = "文章状态", required = true)
+            @RequestParam(name = "status", required = true)
+            String status,
+            @ApiParam(name = "categories", value = "文章分类", required = false)
+            @RequestParam(name = "categories", required = false, defaultValue = "默认分类")
+            String categories,
+            @ApiParam(name = "tags", value = "文章标签", required = false)
+            @RequestParam(name = "tags", required = false)
+            String tags,
+            @ApiParam(name = "allowComment", value = "是否允许评论", required = true)
+            @RequestParam(name = "allowComment", required = true)
+            Boolean allowComment
+    ) {
+        CourseDomain courseDomain = new CourseDomain();
+        courseDomain.setTitle(title);
+        courseDomain.setTitlePic(titlePic);
+        courseDomain.setSlug(slug);
+        courseDomain.setCourse(course);
+        courseDomain.setType(type);
+        courseDomain.setStatus(status);
+        courseDomain.setHits(1);
+        courseDomain.setCommentsNum(0);
+        // 只允许博客文章有分类，防止作品被收入分类
+        courseDomain.setTags(type.equals(Types.ARTICLE.getType()) ? tags : null);
+        courseDomain.setCategories(type.equals(Types.ARTICLE.getType()) ? categories : null);
+        courseDomain.setAllowComment(allowComment ? 1 : 0);
+
+        // 添加文章
+        courseService.addCourseArticle(courseDomain);
 
         return APIResponse.success();
     }
