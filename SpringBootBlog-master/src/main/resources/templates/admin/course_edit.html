@@ -33,10 +33,10 @@
         <div class="row">
           <div class="col-sm-12">
             <h4 class="page-title">
-              <th:block th:if="${null != contents}">
+              <th:block th:if="${null != courses}">
                 编辑教程
               </th:block>
-              <th:block th:unless="${null != contents}">
+              <th:block th:unless="${null != courses}">
                 发布教程
               </th:block>
             </h4>
@@ -45,39 +45,39 @@
             <form id="articleForm" role="form" novalidate="novalidate">
               <input type="hidden" name="categories" id="categories"/>
               <input type="hidden" name="type" id="type"/>
-              <input type="hidden" name="cid"
-                     th:value="${contents!=null and contents.cid!=null}?${contents.cid}: ''" id="cid"/>
+              <input type="hidden" name="coid"
+                     th:value="${courses!=null and courses.coid!=null}?${courses.coid}: ''" id="coid"/>
               <input type="hidden" name="status"
-                     th:value="${contents!=null and contents.status !=null}?${contents.status}: 'publish'"
+                     th:value="${courses!=null and courses.status !=null}?${courses.status}: 'course'"
                      id="status"/>
               <input type="hidden" name="allowComment"
-                     th:value="${contents!=null and contents.allowComment !=null}?${contents.allowComment}: true"
+                     th:value="${courses!=null and courses.allowComment !=null}?${courses.allowComment}: true"
                      id="allow_comment"/>
               <input type="hidden" name="allowPing"
-                     th:value="${contents!=null and contents.allowPing !=null}?${contents.allowPing}: true"
+                     th:value="${courses!=null and courses.allowPing !=null}?${courses.allowPing}: true"
                      id="allow_ping"/>
               <input type="hidden" name="allowFeed"
-                     th:value="${contents!=null and contents.allowFeed !=null}?${contents.allowFeed}: true"
+                     th:value="${courses!=null and courses.allowFeed !=null}?${courses.allowFeed}: true"
                      id="allow_feed"/>
-              <input type="hidden" name="content" id="content-editor"/>
+              <input type="hidden" name="course" id="course-editor"/>
 
               <div class="form-group col-md-6" style="padding: 0 10px 0 0;">
                 <input type="text" class="form-control" placeholder="请输入教程标题（必须）" name="title"
                        required="required"
                        aria-required="true"
-                       th:value="${contents!=null and contents.title!=null }?${contents.title}: ''"/>
+                       th:value="${courses!=null and courses.title!=null }?${courses.title}: ''"/>
               </div>
 
               <div class="form-group col-md-6" style="padding: 0 0 0 10px;">
                 <select id="multiple-type" class="select2 form-control"
                         data-placeholder="请选择教程类型..">
-                  <th:block th:if="${null == contents}">
+                  <th:block th:if="${null == courses}">
                     <option value="post" selected="selected">默认博文</option>
                     <option value="photo" >作品</option>
                   </th:block>
-                  <th:block th:unless="${null == contents}">
-                    <option value="post" th:selected="${null != contents and contents.type=='post'} ? true : false">默认博文</option>
-                    <option value="photo" th:selected="${null != contents and contents.type=='photo'} ? true : false" >作品</option>
+                  <th:block th:unless="${null == courses}">
+                    <option value="post" th:selected="${null != courses and courses.type=='post'} ? true : false">默认博文</option>
+                    <option value="photo" th:selected="${null != courses and courses.type=='photo'} ? true : false" >作品</option>
                   </th:block>
                 </select>
               </div>
@@ -86,7 +86,7 @@
               <div class="form-group col-md-6" style="padding: 0 10px 0 0;">
                 <!-- 如果是作品类，那么暂时不允许使用标签 -->
                 <input name="tags" id="tags"  type="text" class="form-control" placeholder="请填写教程标签"
-                       th:value="${contents!=null and contents.tags !=null}?${contents.tags}: ''"/>
+                       th:value="${courses!=null and courses.tags !=null}?${courses.tags}: ''"/>
               </div>
               <div class="form-group col-md-6" >
                 <select id="multiple-sel"   class="select2 form-control" multiple="multiple"
@@ -97,7 +97,7 @@
                   <th:block th:unless="${null == categories}">
                     <th:block th:each="c : ${categories}">
                       <option th:value="${c.name}" th:text="${c.name}"
-                              th:selected="${null !=contents and adminCommons.exist_cat(c, contents.categories)}?true:false"></option>
+                              th:selected="${null !=courses and adminCommons.exist_cat(c, courses.categories)}?true:false"></option>
                     </th:block>
                   </th:block>
                 </select>
@@ -106,7 +106,7 @@
               <div class="clearfix"></div>
               <div id="my-editormd" >
                                 <textarea id="my-text" name="my-text" style="display:none;" class="markdown-textarea"
-                                          th:utext="${contents!=null and contents.content !=null}?${contents.content}: ''"></textarea>
+                                          th:utext="${courses!=null and courses.course !=null}?${courses.course}: ''"></textarea>
                 <!-- 注意：name属性的值-->
                 <textarea id="text" name="text" style="display:none;" ></textarea>
               </div>
@@ -119,7 +119,7 @@
               <div class="form-group col-md-3 col-sm-4" id="comment-div">
                 <label class="col-sm-4">开启评论</label>
                 <div class="col-sm-8">
-                  <div th:class="${contents!=null and contents.allowComment!=null }?'toggle toggle-success allow-'+${contents.allowComment}:'toggle toggle-success allow-true'"
+                  <div th:class="${courses!=null and courses.allowComment!=null }?'toggle toggle-success allow-'+${courses.allowComment}:'toggle toggle-success allow-true'"
                        onclick="allow_comment(this);"></div>
                 </div>
               </div>
@@ -127,7 +127,7 @@
               <div class="form-group col-md-3 col-sm-4">
                 <label class="col-sm-4">允许Ping</label>
                 <div class="col-sm-8">
-                  <div th:class="${contents!=null and contents.allowPing !=null}?'toggle toggle-success allow-'+${contents.allowPing}:'toggle toggle-success allow-true'"
+                  <div th:class="${courses!=null and courses.allowPing !=null}?'toggle toggle-success allow-'+${courses.allowPing}:'toggle toggle-success allow-true'"
                        onclick="allow_ping(this);"></div>
                 </div>
               </div>
@@ -135,7 +135,7 @@
               <div class="form-group col-md-3 col-sm-4">
                 <label class="col-sm-4">允许订阅</label>
                 <div class="col-sm-8">
-                  <div th:class="${contents!=null and  contents.allowFeed !=null}?'toggle toggle-success allow-'+${contents.allowFeed}: 'toggle toggle-success allow-true'"
+                  <div th:class="${courses!=null and  courses.allowFeed !=null}?'toggle toggle-success allow-'+${courses.allowFeed}: 'toggle toggle-success allow-true'"
                        onclick="allow_feed(this);"></div>
                 </div>
               </div>
@@ -143,13 +143,13 @@
               <div class="clearfix"></div>
 
               <div class="text-right">
-                <a class="btn btn-default waves-effect waves-light" th:href="@{/admin/article}">返回列表</a>
+                <a class="btn btn-default waves-effect waves-light" th:href="@{/admin/course}">返回列表</a>
                 <button type="button" class="btn btn-primary waves-effect waves-light"
-                        onclick="subArticle('publish');">
+                        onclick="subCourse('publish');">
                   保存教程
                 </button>
                 <button type="button" class="btn btn-warning waves-effect waves-light"
-                        onclick="subArticle('draft');">
+                        onclick="subCourse('draft');">
                   存为草稿
                 </button>
               </div>
@@ -195,6 +195,6 @@
 <script th:src="@{//cdn.bootcss.com/multi-select/0.9.12/js/jquery.multi-select.min.js}"></script>
 <script th:src="@{//cdn.bootcss.com/select2/3.4.8/select2.min.js}"></script>
 <script th:src="@{//cdn.bootcss.com/jquery-toggles/2.0.4/toggles.min.js}"></script>
-<script th:src="@{/admin/js/article.js}"></script>
+<script th:src="@{/admin/js/course.js}"></script>
 </body>
 </html>

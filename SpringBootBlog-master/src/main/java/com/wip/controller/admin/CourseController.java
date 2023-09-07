@@ -4,11 +4,11 @@ import com.github.pagehelper.PageInfo;
 import com.wip.constant.LogActions;
 import com.wip.constant.Types;
 import com.wip.controller.BaseController;
-import com.wip.dto.cond.ContentCond;
+import com.wip.dto.cond.CourseCond;
 import com.wip.dto.cond.MetaCond;
-import com.wip.model.ContentDomain;
+import com.wip.model.CourseDomain;
 import com.wip.model.MetaDomain;
-import com.wip.service.article.ContentService;
+import com.wip.service.article.CourseService;
 import com.wip.service.log.LogService;
 import com.wip.service.meta.MetaService;
 import com.wip.utils.APIResponse;
@@ -24,23 +24,23 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@Api("文章管理")
+@Api("教程管理")
 @Controller
-@RequestMapping("/admin/article")
-public class ArticleController extends BaseController {
+@RequestMapping("/admin/course")
+public class CourseController extends BaseController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CourseController.class);
 
     @Autowired
     private MetaService metaService;
 
     @Autowired
-    private ContentService contentService;
+    private CourseService courseService;
 
     @Autowired
     private LogService logService;
 
-    @ApiOperation("文章页")
+    @ApiOperation("教程页")
     @GetMapping(value = "")
     public String index(
             HttpServletRequest request,
@@ -51,50 +51,47 @@ public class ArticleController extends BaseController {
             @RequestParam(name = "limit", required = false, defaultValue = "15")
             int limit
     ) {
-        PageInfo<ContentDomain> articles = contentService.getArticlesByCond(new ContentCond(), page, limit);
+        PageInfo<CourseDomain> articles = courseService.getCourseArticlesByCond(new CourseCond(), page, limit);
         request.setAttribute("articles",articles);
-        return "admin/article_list";
+        return "admin/course_list";
     }
 
-
-    @ApiOperation("发布新文章页")
+    @ApiOperation("发布新教程页")
     @GetMapping(value = "/publish")
-    public String newArticle(HttpServletRequest request) {
+    public String newCourseArticle(HttpServletRequest request) {
         MetaCond metaCond = new MetaCond();
         metaCond.setType(Types.CATEGORY.getType());
         List<MetaDomain> metas = metaService.getMetas(metaCond);
         request.setAttribute("categories",metas);
-        return "admin/article_edit";
+        return "admin/course_edit";
     }
 
-
-    @ApiOperation("文章编辑页")
-    @GetMapping(value = "/{cid}")
-    public String editArticle(
-            @ApiParam(name = "cid", value = "文章编号", required = true)
+    @ApiOperation("教程编辑页")
+    @GetMapping(value = "/{coid}")
+    public String editCourseArticle(
+            @ApiParam(name = "coid", value = "教程编号", required = true)
             @PathVariable
-            Integer cid,
+            Integer coid,
             HttpServletRequest request
     ) {
-        ContentDomain content = contentService.getArticleById(cid);
-        request.setAttribute("contents", content);
+        CourseDomain course = courseService.getCourseArticleById(coid);
+        request.setAttribute("courses", course);
         MetaCond metaCond = new MetaCond();
         metaCond.setType(Types.CATEGORY.getType());
         List<MetaDomain> categories = metaService.getMetas(metaCond);
         request.setAttribute("categories", categories);
         request.setAttribute("active", "article");
-        return "admin/article_edit";
+        return "admin/course_edit";
     }
 
-
-    @ApiOperation("编辑保存文章")
-    @PostMapping("/modify")
+    @ApiOperation("编辑保存教程")
+    @PostMapping("/modifyCourser")
     @ResponseBody
-    public APIResponse modifyArticle(
+    public APIResponse modifyCourserArticle(
             HttpServletRequest request,
-            @ApiParam(name = "cid", value = "文章主键", required = true)
-            @RequestParam(name = "cid", required = true)
-            Integer cid,
+            @ApiParam(name = "coid", value = "教程主键", required = true)
+            @RequestParam(name = "coid", required = true)
+            Integer coid,
             @ApiParam(name = "title", value = "标题", required = true)
             @RequestParam(name = "title", required = true)
             String title,
@@ -104,9 +101,9 @@ public class ArticleController extends BaseController {
             @ApiParam(name = "slug", value = "内容缩略名", required = false)
             @RequestParam(name = "slug", required = false)
             String slug,
-            @ApiParam(name = "content", value = "内容", required = true)
-            @RequestParam(name = "content", required = true)
-            String content,
+            @ApiParam(name = "course", value = "内容", required = true)
+            @RequestParam(name = "course", required = true)
+            String course,
             @ApiParam(name = "type", value = "文章类型", required = true)
             @RequestParam(name = "type", required = true)
             String type,
@@ -123,26 +120,26 @@ public class ArticleController extends BaseController {
             @RequestParam(name = "allowComment", required = true)
             Boolean allowComment
     ) {
-        ContentDomain contentDomain = new ContentDomain();
-        contentDomain.setTitle(title);
-        contentDomain.setCid(cid);
-        contentDomain.setTitlePic(titlePic);
-        contentDomain.setSlug(slug);
-        contentDomain.setContent(content);
-        contentDomain.setType(type);
-        contentDomain.setStatus(status);
-        contentDomain.setTags(tags);
-        contentDomain.setCategories(categories);
-        contentDomain.setAllowComment(allowComment ? 1: 0);
-        contentService.updateArticleById(contentDomain);
+        CourseDomain courseDomain = new CourseDomain();
+        courseDomain.setTitle(title);
+        courseDomain.setCoid(coid);
+        courseDomain.setTitlePic(titlePic);
+        courseDomain.setSlug(slug);
+        courseDomain.setCourse(course);
+        courseDomain.setType(type);
+        courseDomain.setStatus(status);
+        courseDomain.setTags(tags);
+        courseDomain.setCategories(categories);
+        courseDomain.setAllowComment(allowComment ? 1: 0);
+        courseService.updateCourseArticleById(courseDomain);
 
         return APIResponse.success();
     }
 
-    @ApiOperation("发布新文章")
+    @ApiOperation("发布新教程")
     @PostMapping(value = "/publish")
     @ResponseBody
-    public APIResponse publishArticle(
+    public APIResponse publishCourseArticle(
             @ApiParam(name = "title", value = "标题", required = true)
             @RequestParam(name = "title", required = true)
             String title,
@@ -152,9 +149,9 @@ public class ArticleController extends BaseController {
             @ApiParam(name = "slug", value = "内容缩略名", required = false)
             @RequestParam(name = "slug", required = false)
             String slug,
-            @ApiParam(name = "content", value = "内容", required = true)
-            @RequestParam(name = "content", required = true)
-            String content,
+            @ApiParam(name = "course", value = "内容", required = true)
+            @RequestParam(name = "course", required = true)
+            String course,
             @ApiParam(name = "type", value = "文章类型", required = true)
             @RequestParam(name = "type", required = true)
             String type,
@@ -171,44 +168,40 @@ public class ArticleController extends BaseController {
             @RequestParam(name = "allowComment", required = true)
             Boolean allowComment
     ) {
-        ContentDomain contentDomain = new ContentDomain();
-        contentDomain.setTitle(title);
-        contentDomain.setTitlePic(titlePic);
-        contentDomain.setSlug(slug);
-        contentDomain.setContent(content);
-        contentDomain.setType(type);
-        contentDomain.setStatus(status);
-        contentDomain.setHits(1);
-        contentDomain.setCommentsNum(0);
+        CourseDomain courseDomain = new CourseDomain();
+        courseDomain.setTitle(title);
+        courseDomain.setTitlePic(titlePic);
+        courseDomain.setSlug(slug);
+        courseDomain.setCourse(course);
+        courseDomain.setType(type);
+        courseDomain.setStatus(status);
+        courseDomain.setHits(1);
+        courseDomain.setCommentsNum(0);
         // 只允许博客文章有分类，防止作品被收入分类
-        contentDomain.setTags(type.equals(Types.ARTICLE.getType()) ? tags : null);
-        contentDomain.setCategories(type.equals(Types.ARTICLE.getType()) ? categories : null);
-        contentDomain.setAllowComment(allowComment ? 1 : 0);
+        courseDomain.setTags(type.equals(Types.ARTICLE.getType()) ? tags : null);
+        courseDomain.setCategories(type.equals(Types.ARTICLE.getType()) ? categories : null);
+        courseDomain.setAllowComment(allowComment ? 1 : 0);
 
-        // 添加文章
-        contentService.addArticle(contentDomain);
+        // 添加教程
+        courseService.addCourseArticle(courseDomain);
 
         return APIResponse.success();
     }
 
-
-    @ApiOperation("删除文章")
+    @ApiOperation("删除教程")
     @PostMapping("/delete")
     @ResponseBody
-    public APIResponse deleteArticle(
-            @ApiParam(name = "cid", value = "文章ID", required = true)
-            @RequestParam(name = "cid", required = true)
-            Integer cid,
+    public APIResponse deleteCourseArticle(
+            @ApiParam(name = "coid", value = "教程ID", required = true)
+            @RequestParam(name = "coid", required = true)
+            Integer coid,
             HttpServletRequest request
     ) {
-        // 删除文章
-        contentService.deleteArticleById(cid);
+        // 删除教程
+        courseService.deleteCourseArticleById(coid);
         // 写入日志
-        logService.addLog(LogActions.DEL_ARTICLE.getAction(), cid+"",request.getRemoteAddr(),this.getUid(request));
+        logService.addLog(LogActions.DEL_ARTICLE.getAction(), coid+"",request.getRemoteAddr(),this.getUid(request));
         return APIResponse.success();
     }
-
-
-
 
 }

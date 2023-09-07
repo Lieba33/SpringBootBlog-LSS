@@ -8,7 +8,7 @@
     <div class="content-wrap">
         <div id="content" class="content">
             <section id="posts" class="posts-expand">
-                <th:block th:each="post : ${articles.list}">
+                <th:block th:each="post : ${courses.list}">
                     <article class="post post-type-normal">
                         <header class="post-header">
                             <h1 class="post-title">
@@ -59,7 +59,7 @@
                         </div>
                         <!--noindex-->
                         <div class="post-button text-center">
-                            <a class="btn" th:href="@{'/detail/'+${post.cid}}" rel="contents">
+                            <a class="btn" th:href="@{'/detail/'+${post.coid}}" rel="contents">
                                 阅读全文 »
                             </a>
                         </div>
@@ -73,7 +73,7 @@
             </section>
             <!--分页-->
             <div class="lists-navigator clearfix">
-                <div th:replace="comm/pagination::pageNav(${articles})"></div>
+                <div th:replace="comm/pagination::pageNav(${courses})"></div>
             </div>
         </div>
     </div>

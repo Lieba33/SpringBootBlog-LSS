@@ -86,9 +86,9 @@
                        th:class="${active}=='publish'?'waves-effect active':'waves-effect'"><i
                             class="fa fa-pencil-square-o" aria-hidden="true"></i><span> 发布文章 </span></a>
                 </li>
-                <li th:class="${active}=='course'?'active':''">
-                    <a th:href="@{/admin/article/course}"
-                       th:class="${active}=='course'?'waves-effect active':'waves-effect'"><i
+                <li th:class="${active}=='publish'?'active':''">
+                    <a th:href="@{/admin/course/publish}"
+                       th:class="${active}=='publish'?'waves-effect active':'waves-effect'"><i
                             class="fa fa-pencil-square-o" aria-hidden="true"></i><span> 发布教程 </span></a>
                 </li>
                 <li th:class="${active}=='article'?'active':''">

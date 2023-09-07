@@ -12,8 +12,10 @@ import com.wip.dto.cond.MetaCond;
 import com.wip.exception.BusinessException;
 import com.wip.model.CommentDomain;
 import com.wip.model.ContentDomain;
+import com.wip.model.CourseDomain;
 import com.wip.model.MetaDomain;
 import com.wip.service.article.ContentService;
+import com.wip.service.article.CourseService;
 import com.wip.service.comment.CommentService;
 import com.wip.service.meta.MetaService;
 import com.wip.service.site.SiteService;
@@ -41,6 +43,9 @@ public class HomeController extends BaseController {
 
     @Autowired
     private ContentService contentService;
+
+    @Autowired
+    private CourseService courseService;
 
     @Autowired
     private CommentService commentService;
@@ -81,21 +86,6 @@ public class HomeController extends BaseController {
         return "blog/archives";
     }
 
-    @ApiOperation("教程内容页")
-    @GetMapping(value = "/course")
-    public String course(
-            HttpServletRequest request,
-            @ApiParam(name = "page", value = "页数", required = false)
-            @RequestParam(name = "page", required = false, defaultValue = "1")
-            int page,
-            @ApiParam(name = "limit", value = "每页数量", required = false)
-            @RequestParam(name = "limit", required = false, defaultValue = "10")
-            int limit
-    ) {
-        PageInfo<ContentDomain> articles = contentService.getArticlesByCond(new ContentCond(), page, limit);
-        request.setAttribute("articles", articles);
-        return "blog/course";
-    }
 
     @ApiOperation("分类内容页")
     @GetMapping(value = "/categories")
@@ -158,6 +148,11 @@ public class HomeController extends BaseController {
         return "blog/about";
     }
 
+    @GetMapping(value = "/course")
+    public String course() {
+        return "blog/course";
+    }
+
     @ApiOperation("文章内容页")
     @GetMapping(value = "/detail/{cid}")
     public String detail(
@@ -178,6 +173,26 @@ public class HomeController extends BaseController {
         return "blog/detail";
     }
 
+    @ApiOperation("教程内容页")
+    @GetMapping(value = "/course/{coid}")
+    public String course(
+            @ApiParam(name = "coid", value = "文章主键", required = true)
+            @PathVariable("coid")
+            Integer coid,
+            HttpServletRequest request
+    ) {
+        CourseDomain article = courseService.getCourseArticleById(coid);
+        request.setAttribute("article", article);
+
+        // 更新教程的点击量
+        this.updateCourseArticleHits(article.getCoid(),article.getHits());
+        // 获取评论
+        List<CommentDomain> comments = commentService.getCommentsByCId(coid);
+        request.setAttribute("comments", comments);
+//新加一个教程详情html页面，这里也改一下
+        return "blog/course";
+    }
+
     /**
      * 更新文章的点击率
      * @param cid
@@ -194,6 +209,29 @@ public class HomeController extends BaseController {
             temp.setCid(cid);
             temp.setHits(chits + hits);
             contentService.updateContentByCid(temp);
+            cache.hset("article", "hits", 1);
+        } else {
+            cache.hset("article", "hits", hits);
+        }
+
+    }
+
+    /**
+     * 更新教程的点击率
+     * @param coid
+     * @param chits
+     */
+    private void updateCourseArticleHits(Integer coid, Integer chits) {
+        Integer hits = cache.hget("article", "hits");
+        if (chits == null) {
+            chits = 0;
+        }
+        hits = null == hits ? 1 : hits + 1;
+        if (hits >= WebConst.HIT_EXEED) {
+            CourseDomain temp = new CourseDomain();
+            temp.setCoid(coid);
+            temp.setHits(chits + hits);
+            courseService.updateCourseByCoid(temp);
             cache.hset("article", "hits", 1);
         } else {
             cache.hset("article", "hits", hits);
