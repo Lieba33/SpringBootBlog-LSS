@@ -8,6 +8,7 @@ import com.wip.constant.WebConst;
 import com.wip.dto.MetaDto;
 import com.wip.dto.StatisticsDto;
 import com.wip.dto.cond.ContentCond;
+import com.wip.dto.cond.CourseCond;
 import com.wip.dto.cond.MetaCond;
 import com.wip.exception.BusinessException;
 import com.wip.model.CommentDomain;
@@ -68,6 +69,22 @@ public class HomeController extends BaseController {
 
         request.setAttribute("articles",articles);
         return "blog/home";
+    }
+
+    @GetMapping(value = "/courses")
+    public String courses(
+            HttpServletRequest request,
+            @ApiParam(name = "page", value = "页数", required = false)
+            @RequestParam(name = "page", required = false, defaultValue = "1")
+            int page,
+            @ApiParam(name = "limit", value = "每页数量", required = false)
+            @RequestParam(name = "limit", required = false, defaultValue = "5")
+            int limit
+    ) {
+        PageInfo<CourseDomain> course = courseService.getCourseArticlesByCond(new CourseCond(), page, limit);
+
+        request.setAttribute("courses",course);
+        return "blog/course";
     }
 
     @ApiOperation("归档内容页")

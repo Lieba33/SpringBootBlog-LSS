@@ -51,8 +51,8 @@ public class CourseController extends BaseController {
             @RequestParam(name = "limit", required = false, defaultValue = "15")
             int limit
     ) {
-        PageInfo<CourseDomain> articles = courseService.getCourseArticlesByCond(new CourseCond(), page, limit);
-        request.setAttribute("articles",articles);
+        PageInfo<CourseDomain> Courses = courseService.getCourseArticlesByCond(new CourseCond(), page, limit);
+        request.setAttribute("Courses",Courses);
         return "admin/course_list";
     }
 
@@ -183,7 +183,7 @@ public class CourseController extends BaseController {
         courseDomain.setAllowComment(allowComment ? 1 : 0);
 
         // 添加教程
-        courseService.addCourseArticle(courseDomain);
+        courseService.addCourseArticle(courseDomain);//这行有问题
 
         return APIResponse.success();
     }

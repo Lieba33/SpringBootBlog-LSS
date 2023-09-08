@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='教程管理',active='article'">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='教程管理',active='course'">
 <header th:replace="admin/fragments/header::headerFragment(${title},${active})"></header>
 <body class="fixed-left">
 <div id="wrapper">
@@ -25,7 +25,7 @@
               </tr>
               </thead>
               <tbody>
-              <th:block th:each="post : ${articles.list}">
+              <th:block th:each="post : ${courses.list}">
                 <tr th:cid="${post.coid}">
                   <td>
                     <a th:href="@{'/admin/course/'+${post.coid}}" th:text="${post.title}"></a>

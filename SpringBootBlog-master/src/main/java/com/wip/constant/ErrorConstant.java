@@ -27,6 +27,17 @@ public interface ErrorConstant {
 
     }
 
+    interface Course {
+        static final String UPDATE_ARTICLE_FAIL = "更新教程失败";
+        static final String ADD_NEW_ARTICLE_FAIL = "添加教程失败";
+        static final String DELETE_ARTICLE_ERROR = "删除教程失败";
+        static final String TITLE_IS_TOO_LONG = "教程标题过长";
+        static final String TITLE_CAN_NOT_EMPTY = "教程标题不能为空";
+        static final String COURSE_CAN_NOT_EMPTY = "教程内容不能为空";
+        static final String COURSE_IS_TOO_LONG = "教程字数超过限制";
+
+    }
+
     interface Att {
         static final String ADD_NEW_ATT_FAIL = "添加附件信息失败";
         static final String UPDATE_ATT_FAIL =  "更新附件信息失败";

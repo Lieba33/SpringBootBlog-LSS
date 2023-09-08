@@ -28,7 +28,7 @@ var tale = new $.tale();
  */
 function subCourse(status) {
     var title = $('#articleForm input[name=title]').val();
-    var content = $('#text').val();
+    var course = $('#text').val();
     if (title == '') {
         tale.alertWarn('请输入教程标题');
         return;
@@ -43,7 +43,7 @@ function subCourse(status) {
     $("#articleForm #type").val($('#multiple-type').val());
     var params = $("#articleForm").serialize();
     console.log(params);
-    var url = $('#articleForm #cid').val() != '' ? '/admin/course/modifyCourser' : '/admin/course/publish';
+    var url = $('#articleForm #coid').val() != '' ? '/admin/course/modifyCourser' : '/admin/course/publish';
     tale.post({
         url:url,
         data:params,

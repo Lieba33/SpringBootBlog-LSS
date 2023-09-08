@@ -50,22 +50,22 @@ public class CourseServiceImpl implements CourseService {
             throw BusinessException.withErrorCode(ErrorConstant.Common.PARAM_IS_EMPTY);
 
         if (StringUtils.isBlank(courseDomain.getTitle()))
-            throw BusinessException.withErrorCode(ErrorConstant.Article.TITLE_CAN_NOT_EMPTY);
+            throw BusinessException.withErrorCode(ErrorConstant.Course.TITLE_CAN_NOT_EMPTY);
 
         if (courseDomain.getTitle().length() > WebConst.MAX_TITLE_COUNT)
-            throw BusinessException.withErrorCode(ErrorConstant.Article.TITLE_IS_TOO_LONG);
+            throw BusinessException.withErrorCode(ErrorConstant.Course.TITLE_IS_TOO_LONG);
 
         if (StringUtils.isBlank(courseDomain.getCourse()))
-            throw BusinessException.withErrorCode(ErrorConstant.Article.CONTENT_CAN_NOT_EMPTY);
+            throw BusinessException.withErrorCode(ErrorConstant.Course.COURSE_CAN_NOT_EMPTY);//这行有问题
 
         if (courseDomain.getCourse().length() > WebConst.MAX_CONTENT_COUNT)
-            throw BusinessException.withErrorCode(ErrorConstant.Article.CONTENT_IS_TOO_LONG);
+            throw BusinessException.withErrorCode(ErrorConstant.Course.COURSE_IS_TOO_LONG);
 
         // 取到标签和分类
         String tags = courseDomain.getTags();
         String categories = courseDomain.getCategories();
 
-        // 添加文章
+        // 添加教程
         courseDao.addCourseArticle(courseDomain);
 
         // 添加分类和标签
