@@ -12,19 +12,19 @@ public class CourseShipDomain {
     /**
      * 教程主键
      */
-    private Integer coid;
+    private Integer couid;
 
     /**
      * 项目编号
      */
     private Integer mid;
 
-    public Integer getCoid() {
-        return coid;
+    public Integer getCouid() {
+        return couid;
     }
 
-    public void setCoid(Integer coid) {
-        this.coid = coid;
+    public void setCouid(Integer couid) {
+        this.couid = couid;
     }
 
     public Integer getMid() {

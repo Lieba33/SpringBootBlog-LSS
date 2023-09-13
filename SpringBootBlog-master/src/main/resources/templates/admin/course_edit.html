@@ -45,8 +45,8 @@
             <form id="articleForm" role="form" novalidate="novalidate">
               <input type="hidden" name="categories" id="categories"/>
               <input type="hidden" name="type" id="type"/>
-              <input type="hidden" name="coid"
-                     th:value="${courses!=null and courses.coid!=null}?${courses.coid}: ''" id="coid"/>
+              <input type="hidden" name="couid"
+                     th:value="${courses!=null and courses.couid!=null}?${courses.couid}: ''" id="couid"/>
               <input type="hidden" name="status"
                      th:value="${courses!=null and courses.status !=null}?${courses.status}: 'course'"
                      id="status"/>

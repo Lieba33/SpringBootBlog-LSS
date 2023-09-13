@@ -132,6 +132,11 @@
                 alert("邮箱不能为空");
                 return false;
             }
+            if (null == url || "" == url || undefined == url) {
+                alert("网址不能为空");
+                return false;
+            }
+
 
             var data = {
                 "content": content,

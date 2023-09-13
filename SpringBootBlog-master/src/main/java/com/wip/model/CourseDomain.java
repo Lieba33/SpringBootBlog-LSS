@@ -13,7 +13,7 @@ public class CourseDomain {
     /**
      * 教程的主键编号
      */
-    private Integer coid;
+    private Integer couid;
     /**
      * 内容标题
      */
@@ -79,12 +79,12 @@ public class CourseDomain {
      */
     private Integer allowFeed;
 
-    public Integer getCoid() {
-        return coid;
+    public Integer getCouid() {
+        return couid;
     }
 
-    public void setCoid(Integer coid) {
-        this.coid = coid;
+    public void setCouid(Integer couid) {
+        this.couid = couid;
     }
 
     public String getTitle() {

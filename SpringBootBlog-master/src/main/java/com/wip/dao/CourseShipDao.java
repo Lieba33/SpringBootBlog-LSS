@@ -32,11 +32,11 @@ public interface CourseShipDao {
 
     /**
      * 获取数量
-     * @param coid
+     * @param couid
      * @param mid
      * @return
      */
-    Long getCourseCountById(@Param("coid") Integer coid, @Param("mid") Integer mid);
+    Long getCourseCountById(@Param("couid") Integer couid, @Param("mid") Integer mid);
 
     /**
      * 添加
@@ -47,13 +47,13 @@ public interface CourseShipDao {
 
     /**
      * 根据教程编号删除关联
-     * @param coid
+     * @param couid
      */
-    void deleteCourseShipByCoid(int coid);
+    void deleteCourseShipByCouid(int couid);
 
     /**
      * 根据教程ID获取关联
-     * @param coid
+     * @param couid
      */
-    List<CourseShipDomain> getCourseShipByCoid(Integer coid);
+    List<CourseShipDomain> getCourseShipByCouid(Integer couid);
 }

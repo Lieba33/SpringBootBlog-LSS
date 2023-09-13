@@ -67,14 +67,14 @@ public class CourseController extends BaseController {
     }
 
     @ApiOperation("教程编辑页")
-    @GetMapping(value = "/{coid}")
+    @GetMapping(value = "/{couid}")
     public String editCourseArticle(
-            @ApiParam(name = "coid", value = "教程编号", required = true)
+            @ApiParam(name = "couid", value = "教程编号", required = true)
             @PathVariable
-            Integer coid,
+            Integer couid,
             HttpServletRequest request
     ) {
-        CourseDomain course = courseService.getCourseArticleById(coid);
+        CourseDomain course = courseService.getCourseArticleById(couid);
         request.setAttribute("courses", course);
         MetaCond metaCond = new MetaCond();
         metaCond.setType(Types.CATEGORY.getType());
@@ -89,9 +89,9 @@ public class CourseController extends BaseController {
     @ResponseBody
     public APIResponse modifyCourserArticle(
             HttpServletRequest request,
-            @ApiParam(name = "coid", value = "教程主键", required = true)
-            @RequestParam(name = "coid", required = true)
-            Integer coid,
+            @ApiParam(name = "couid", value = "教程主键", required = true)
+            @RequestParam(name = "couid", required = true)
+            Integer couid,
             @ApiParam(name = "title", value = "标题", required = true)
             @RequestParam(name = "title", required = true)
             String title,
@@ -122,7 +122,7 @@ public class CourseController extends BaseController {
     ) {
         CourseDomain courseDomain = new CourseDomain();
         courseDomain.setTitle(title);
-        courseDomain.setCoid(coid);
+        courseDomain.setCouid(couid);
         courseDomain.setTitlePic(titlePic);
         courseDomain.setSlug(slug);
         courseDomain.setCourse(course);
@@ -192,15 +192,15 @@ public class CourseController extends BaseController {
     @PostMapping("/delete")
     @ResponseBody
     public APIResponse deleteCourseArticle(
-            @ApiParam(name = "coid", value = "教程ID", required = true)
-            @RequestParam(name = "coid", required = true)
-            Integer coid,
+            @ApiParam(name = "couid", value = "教程ID", required = true)
+            @RequestParam(name = "couid", required = true)
+            Integer couid,
             HttpServletRequest request
     ) {
         // 删除教程
-        courseService.deleteCourseArticleById(coid);
+        courseService.deleteCourseArticleById(couid);
         // 写入日志
-        logService.addLog(LogActions.DEL_ARTICLE.getAction(), coid+"",request.getRemoteAddr(),this.getUid(request));
+        logService.addLog(LogActions.DEL_ARTICLE.getAction(), couid+"",request.getRemoteAddr(),this.getUid(request));
         return APIResponse.success();
     }
 

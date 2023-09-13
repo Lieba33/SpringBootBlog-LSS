@@ -26,9 +26,9 @@
               </thead>
               <tbody>
               <th:block th:each="post : ${courses.list}">
-                <tr th:cid="${post.coid}">
+                <tr th:cid="${post.couid}">
                   <td>
-                    <a th:href="@{'/admin/course/'+${post.coid}}" th:text="${post.title}"></a>
+                    <a th:href="@{'/admin/course/'+${post.couid}}" th:text="${post.title}"></a>
                   </td>
                   <td>
                     <th:block th:if="${post.type == 'post'}">
@@ -50,13 +50,13 @@
                     </th:block>
                   </td>
                   <td>
-                    <a th:href="@{'/admin/course/'+${post.coid}}" class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
+                    <a th:href="@{'/admin/course/'+${post.couid}}" class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
                       <i class="fa fa-edit"></i> <span>编辑</span>
                     </a>
-                    <a href="javascript:void(0)" th:onclick="'delPost('+${post.coid}+');'" class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
+                    <a href="javascript:void(0)" th:onclick="'delPost('+${post.couid}+');'" class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
                       <i class="fa fa-trash-o"></i> <span>删除</span>
                     </a>
-                    <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5" th:href="${post.type=='post' ? commons.blogPermalink(post.coid) : commons.photoPermalink(post.coid)}" target="_blank">
+                    <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5" th:href="${post.type=='post' ? commons.blogPermalink(post.couid) : commons.photoPermalink(post.couid)}" target="_blank">
                       <i class="fa fa-rocket"></i> <span>预览</span>
                     </a>
                   </td>
@@ -83,7 +83,7 @@
       then: function () {
         tale.post({
           url : '/admin/course/delete',
-          data: {coid: coid},
+          data: {couid: couid},
           success: function (result) {
             if(result && result.code == 'success'){
               tale.alertOkAndReload('教程删除成功');

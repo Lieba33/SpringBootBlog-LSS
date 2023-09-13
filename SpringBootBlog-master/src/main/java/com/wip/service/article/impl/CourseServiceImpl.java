@@ -69,17 +69,17 @@ public class CourseServiceImpl implements CourseService {
         courseDao.addCourseArticle(courseDomain);
 
         // 添加分类和标签
-        int coid = courseDomain.getCoid();
-        metaService.addMetas(coid, tags, Types.TAG.getType());
-        metaService.addMetas(coid, categories, Types.CATEGORY.getType());
+        int couid = courseDomain.getCouid();
+        metaService.addMetas(couid, tags, Types.TAG.getType());
+        metaService.addMetas(couid, categories, Types.CATEGORY.getType());
     }
 
     @Override
     @Cacheable(value = "courseArticleCache", key = "'courseArticleById_' + #p0")
-    public CourseDomain getCourseArticleById(Integer coid) {
-        if (null == coid)
+    public CourseDomain getCourseArticleById(Integer couid) {
+        if (null == couid)
             throw BusinessException.withErrorCode(ErrorConstant.Common.PARAM_IS_EMPTY);
-        return courseDao.getCourseArticleById(coid);
+        return courseDao.getCourseArticleById(couid);
     }
 
     @Override
@@ -93,10 +93,10 @@ public class CourseServiceImpl implements CourseService {
 
         // 更新教程
         courseDao.updateCourseArticleById(courseDomain);
-        int coid = courseDomain.getCoid();
-        courseShipDao.deleteCourseShipByCoid(coid);
-        metaService.addMetas(coid,tags,Types.TAG.getType());
-        metaService.addMetas(coid,categories,Types.CATEGORY.getType());
+        int couid = courseDomain.getCouid();
+        courseShipDao.deleteCourseShipByCouid(couid);
+        metaService.addMetas(couid,tags,Types.TAG.getType());
+        metaService.addMetas(couid,categories,Types.CATEGORY.getType());
     }
 
     @Override
@@ -113,15 +113,15 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     @CacheEvict(value = {"courseArticleCache","courseArticleCaches"},allEntries = true, beforeInvocation = true)
-    public void deleteCourseArticleById(Integer coid) {
+    public void deleteCourseArticleById(Integer couid) {
 
-        if (null == coid)
+        if (null == couid)
             throw BusinessException.withErrorCode(ErrorConstant.Common.PARAM_IS_EMPTY);
         // 删除教程
-        courseDao.deleteCourseArticleById(coid);
+        courseDao.deleteCourseArticleById(couid);
 
         // 同时要删除该 教程下的所有评论
-        List<CommentDomain> comments = commentDao.getCommentByCId(coid);
+        List<CommentDomain> comments = commentDao.getCommentByCId(couid);
         if (null != comments && comments.size() > 0) {
             comments.forEach(comment -> {
                 commentDao.deleteComment(comment.getCoid());
@@ -129,16 +129,16 @@ public class CourseServiceImpl implements CourseService {
         }
 
         // 删除标签和分类关联
-        List<CourseShipDomain> courseShips = courseShipDao.getCourseShipByCoid(coid);
+        List<CourseShipDomain> courseShips = courseShipDao.getCourseShipByCouid(couid);
         if (null != courseShips && courseShips.size() > 0) {
-            courseShipDao.deleteCourseShipByCoid(coid);
+            courseShipDao.deleteCourseShipByCouid(couid);
         }
     }
 
     @Override
     @CacheEvict(value = {"courseArticleCache","courseArticleCaches"}, allEntries = true, beforeInvocation = true)
-    public void updateCourseByCoid(CourseDomain course) {
-        if (null != course && null != course.getCoid()) {
+    public void updateCourseByCouid(CourseDomain course) {
+        if (null != course && null != course.getCouid()) {
             courseDao.updateCourseArticleById(course);
         }
     }

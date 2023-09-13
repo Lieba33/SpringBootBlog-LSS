@@ -191,20 +191,20 @@ public class HomeController extends BaseController {
     }
 
     @ApiOperation("教程内容页")
-    @GetMapping(value = "/course/{coid}")
+    @GetMapping(value = "/course/{couid}")
     public String course(
-            @ApiParam(name = "coid", value = "文章主键", required = true)
-            @PathVariable("coid")
-            Integer coid,
+            @ApiParam(name = "coud", value = "文章主键", required = true)
+            @PathVariable("couid")
+            Integer couid,
             HttpServletRequest request
     ) {
-        CourseDomain article = courseService.getCourseArticleById(coid);
+        CourseDomain article = courseService.getCourseArticleById(couid);
         request.setAttribute("article", article);
 
         // 更新教程的点击量
-        this.updateCourseArticleHits(article.getCoid(),article.getHits());
+        this.updateCourseArticleHits(article.getCouid(),article.getHits());
         // 获取评论
-        List<CommentDomain> comments = commentService.getCommentsByCId(coid);
+        List<CommentDomain> comments = commentService.getCommentsByCId(couid);
         request.setAttribute("comments", comments);
 //新加一个教程详情html页面，这里也改一下
         return "blog/course";
@@ -235,10 +235,10 @@ public class HomeController extends BaseController {
 
     /**
      * 更新教程的点击率
-     * @param coid
+     * @param couid
      * @param chits
      */
-    private void updateCourseArticleHits(Integer coid, Integer chits) {
+    private void updateCourseArticleHits(Integer couid, Integer chits) {
         Integer hits = cache.hget("article", "hits");
         if (chits == null) {
             chits = 0;
@@ -246,9 +246,9 @@ public class HomeController extends BaseController {
         hits = null == hits ? 1 : hits + 1;
         if (hits >= WebConst.HIT_EXEED) {
             CourseDomain temp = new CourseDomain();
-            temp.setCoid(coid);
+            temp.setCouid(couid);
             temp.setHits(chits + hits);
-            courseService.updateCourseByCoid(temp);
+            courseService.updateCourseByCouid(temp);
             cache.hset("article", "hits", 1);
         } else {
             cache.hset("article", "hits", hits);
@@ -294,8 +294,8 @@ public class HomeController extends BaseController {
             return APIResponse.fail("请输入正确的网址格式");
         }
 
-        if (content.length() > 200) {
-            return APIResponse.fail("请输入200个字符以内的评价");
+        if (content.length() > 200 || content.length() < 5) {
+            return APIResponse.fail("请输入5~200个字符的评价");
         }
 
         String val = IPKit.getIpAddressByRequest1(request) + ":" + cid;

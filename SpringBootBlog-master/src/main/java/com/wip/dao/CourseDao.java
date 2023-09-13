@@ -26,10 +26,10 @@ public interface CourseDao {
 
     /**
      * 根据编号获取教程
-     * @param coid
+     * @param couid
      * @return
      */
-    CourseDomain getCourseArticleById(Integer coid);
+    CourseDomain getCourseArticleById(Integer couid);
 
     /**
      * 更新教程
@@ -46,9 +46,9 @@ public interface CourseDao {
 
     /**
      * 删除教程
-     * @param coid
+     * @param couid
      */
-    void deleteCourseArticleById(Integer coid);
+    void deleteCourseArticleById(Integer couid);
 
     /**
      * 获取教程总数
@@ -65,9 +65,9 @@ public interface CourseDao {
 
     /**
      * 通过标签获取教程
-     * @param coid
+     * @param couid
      * @return
      */
-    List<CourseDomain> getCourseArticleByTags(List<CourseShipDomain> coid);
+    List<CourseDomain> getCourseArticleByTags(List<CourseShipDomain> couid);
 
 }

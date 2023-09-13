@@ -21,10 +21,10 @@ public interface CourseService {
 
     /**
      * 根据编号获取教程
-     * @param coid
+     * @param couid
      * @return
      */
-    CourseDomain getCourseArticleById(Integer coid);
+    CourseDomain getCourseArticleById(Integer couid);
 
     /**
      * 更新教程
@@ -43,15 +43,15 @@ public interface CourseService {
 
     /**
      * 删除教程
-     * @param coid
+     * @param couid
      */
-    void deleteCourseArticleById(Integer coid);
+    void deleteCourseArticleById(Integer couid);
 
     /**
      * 添加教程点击量
      * @param course
      */
-    void updateCourseByCoid(CourseDomain course);
+    void updateCourseByCouid(CourseDomain course);
 
     /**
      * 通过分类获取教程
