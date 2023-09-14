@@ -9,7 +9,7 @@
     <!--教程表列名-->
     <sql id="BASE_COLUMN">
         c.couid, c.title, c.titlePic, c.slug, c.created, c.modified, c.course, c.authorId,
-        c.type, c.status, c.tags, c.categories, c.hits, c.commentsNum, c.allowComment,
+        c.type, c.status, c.tags, c.categories, c.hits, c.coursementsNum, c.allowComment,
         c.allowPing, c.allowFeed
     </sql>
 
@@ -24,7 +24,7 @@
         <include refid="BASE_TABLE"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
             title, titlePic, slug, created, course, authorId,
-            type, status, tags, categories, hits, commentsNum, allowComment,
+            type, status, tags, categories, hits, coursementsNum, allowComment,
             allowPing, allowFeed
         </trim>
         <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
@@ -39,7 +39,7 @@
             #{tags, jdbcType=VARCHAR},
             #{categories, jdbcType=VARCHAR},
             #{hits, jdbcType=INTEGER},
-            #{commentsNum, jdbcType=INTEGER},
+            #{coursementsNum, jdbcType=INTEGER},
             #{allowComment, jdbcType=INTEGER},
             #{allowPing, jdbcType=INTEGER},
             #{allowFeed, jdbcType=INTEGER}
@@ -89,8 +89,8 @@
             <if test="hits != null">
                 hits = #{hits, jdbcType=INTEGER},
             </if>
-            <if test="commentsNum != null">
-                commentsNum = #{commentsNum, jdbcType=INTEGER},
+            <if test="coursementsNum != null">
+                coursementsNum = #{coursementsNum, jdbcType=INTEGER},
             </if>
             <if test="allowComment != null">
                 allowComment = #{allowComment, jdbcType=INTEGER},

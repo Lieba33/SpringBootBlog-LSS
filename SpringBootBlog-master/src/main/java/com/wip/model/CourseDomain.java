@@ -65,7 +65,7 @@ public class CourseDomain {
     /**
      * 内容所属评论数
      */
-    private Integer commentsNum;
+    private Integer coursementsNum;
     /**
      * 是否允许评论
      */
@@ -183,12 +183,12 @@ public class CourseDomain {
         this.hits = hits;
     }
 
-    public Integer getCommentsNum() {
-        return commentsNum;
+    public Integer getCoursementsNum() {
+        return coursementsNum;
     }
 
-    public void setCommentsNum(Integer commentsNum) {
-        this.commentsNum = commentsNum;
+    public void setCoursementsNum(Integer coursementsNum) {
+        this.coursementsNum = coursementsNum;
     }
 
     public Integer getAllowComment() {

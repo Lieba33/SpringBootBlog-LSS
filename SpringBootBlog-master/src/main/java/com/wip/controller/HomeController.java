@@ -11,13 +11,11 @@ import com.wip.dto.cond.ContentCond;
 import com.wip.dto.cond.CourseCond;
 import com.wip.dto.cond.MetaCond;
 import com.wip.exception.BusinessException;
-import com.wip.model.CommentDomain;
-import com.wip.model.ContentDomain;
-import com.wip.model.CourseDomain;
-import com.wip.model.MetaDomain;
+import com.wip.model.*;
 import com.wip.service.article.ContentService;
 import com.wip.service.article.CourseService;
 import com.wip.service.comment.CommentService;
+import com.wip.service.comment.CoursementService;
 import com.wip.service.meta.MetaService;
 import com.wip.service.site.SiteService;
 import com.wip.utils.APIResponse;
@@ -50,6 +48,9 @@ public class HomeController extends BaseController {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private CoursementService coursementService;
 
     @Autowired
     private MetaService metaService;
@@ -204,8 +205,8 @@ public class HomeController extends BaseController {
         // 更新教程的点击量
         this.updateCourseArticleHits(article.getCouid(),article.getHits());
         // 获取评论
-        List<CommentDomain> comments = commentService.getCommentsByCId(couid);
-        request.setAttribute("comments", comments);
+        List<CoursementDomain> coursements = coursementService.getCoursementByCId(couid);
+        request.setAttribute("coursements", coursements);
 //新加一个教程详情html页面，这里也改一下
         return "blog/course";
     }

@@ -176,7 +176,7 @@ public class CourseController extends BaseController {
         courseDomain.setType(type);
         courseDomain.setStatus(status);
         courseDomain.setHits(1);
-        courseDomain.setCommentsNum(0);
+        courseDomain.setCoursementsNum(0);
         // 只允许博客文章有分类，防止作品被收入分类
         courseDomain.setTags(type.equals(Types.ARTICLE.getType()) ? tags : null);
         courseDomain.setCategories(type.equals(Types.ARTICLE.getType()) ? categories : null);
