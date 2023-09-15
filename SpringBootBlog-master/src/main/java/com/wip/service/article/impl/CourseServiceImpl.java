@@ -10,7 +10,7 @@ import com.github.pagehelper.PageInfo;
 import com.wip.constant.ErrorConstant;
 import com.wip.constant.Types;
 import com.wip.constant.WebConst;
-import com.wip.dao.CommentDao;
+import com.wip.dao.CoursementDao;
 import com.wip.dao.CourseDao;
 import com.wip.dao.CourseShipDao;
 import com.wip.dto.cond.CourseCond;
@@ -40,7 +40,7 @@ public class CourseServiceImpl implements CourseService {
     private CourseShipDao courseShipDao;
 
     @Autowired
-    private CommentDao commentDao;
+    private CoursementDao coursementDao;
 
     @Transactional
     @Override
@@ -55,8 +55,8 @@ public class CourseServiceImpl implements CourseService {
         if (courseDomain.getTitle().length() > WebConst.MAX_TITLE_COUNT)
             throw BusinessException.withErrorCode(ErrorConstant.Course.TITLE_IS_TOO_LONG);
 
-        if (StringUtils.isBlank(courseDomain.getCourse()))
-            throw BusinessException.withErrorCode(ErrorConstant.Course.COURSE_CAN_NOT_EMPTY);//这行有问题
+//        if (StringUtils.isBlank(courseDomain.getCourse()))
+//            throw BusinessException.withErrorCode(ErrorConstant.Course.COURSE_CAN_NOT_EMPTY);//这行有问题
 
         if (courseDomain.getCourse().length() > WebConst.MAX_CONTENT_COUNT)
             throw BusinessException.withErrorCode(ErrorConstant.Course.COURSE_IS_TOO_LONG);
@@ -121,10 +121,10 @@ public class CourseServiceImpl implements CourseService {
         courseDao.deleteCourseArticleById(couid);
 
         // 同时要删除该 教程下的所有评论
-        List<CommentDomain> comments = commentDao.getCommentByCId(couid);
-        if (null != comments && comments.size() > 0) {
-            comments.forEach(comment -> {
-                commentDao.deleteComment(comment.getCoid());
+        List<CoursementDomain> coursements = coursementDao.getCoursementByCId(couid);
+        if (null != coursements && coursements.size() > 0) {
+            coursements.forEach(coursement -> {
+                coursementDao.deleteCoursement(coursement.getCoid());
             });
         }
 

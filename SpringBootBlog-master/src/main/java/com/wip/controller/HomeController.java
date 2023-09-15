@@ -17,7 +17,6 @@ import com.wip.service.article.CourseService;
 import com.wip.service.comment.CommentService;
 import com.wip.service.comment.CoursementService;
 import com.wip.service.meta.MetaService;
-import com.wip.service.site.SiteService;
 import com.wip.utils.APIResponse;
 import com.wip.utils.IPKit;
 import com.wip.utils.TaleUtils;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -194,21 +192,20 @@ public class HomeController extends BaseController {
     @ApiOperation("教程内容页")
     @GetMapping(value = "/course/{couid}")
     public String course(
-            @ApiParam(name = "coud", value = "文章主键", required = true)
+            @ApiParam(name = "couid", value = "文章主键", required = true)
             @PathVariable("couid")
             Integer couid,
             HttpServletRequest request
     ) {
-        CourseDomain article = courseService.getCourseArticleById(couid);
-        request.setAttribute("article", article);
+        CourseDomain course = courseService.getCourseArticleById(couid);
+        request.setAttribute("article", course);
 
         // 更新教程的点击量
-        this.updateCourseArticleHits(article.getCouid(),article.getHits());
+        this.updateCourseArticleHits(course.getCouid(),course.getHits());
         // 获取评论
         List<CoursementDomain> coursements = coursementService.getCoursementByCId(couid);
         request.setAttribute("coursements", coursements);
-//新加一个教程详情html页面，这里也改一下
-        return "blog/course";
+        return "blog/course_detail";
     }
 
     /**
@@ -323,6 +320,91 @@ public class HomeController extends BaseController {
 
         try {
             commentService.addComment(comments);
+            cookie("tale_remember_author", URLEncoder.encode(author,"UTF-8"), 7 * 24 * 60 * 60, response);
+            cookie("tale_remember_mail", URLEncoder.encode(email,"UTF-8"), 7 * 24 * 60 * 60, response);
+            if (StringUtils.isNotBlank(url)) {
+                cookie("tale_remember_url",URLEncoder.encode(url,"UTF-8"),7 * 24 * 60 * 60, response);
+            }
+            // 设置对每个文章1分钟可以评论一次
+            cache.hset(Types.COMMENTS_FREQUENCY.getType(),val,1,60);
+
+            return APIResponse.success();
+
+        } catch (Exception e) {
+            throw BusinessException.withErrorCode(ErrorConstant.Comment.ADD_NEW_COMMENT_FAIL);
+        }
+
+    }
+
+    /**
+     * 教程的评论
+     */
+    @PostMapping(value = "/coursement")
+    @ResponseBody
+    public APIResponse coursement(HttpServletRequest request, HttpServletResponse response,
+                               @RequestParam(name = "couid", required = true) Integer couid,
+                               @RequestParam(name = "coid", required = false) Integer coid,
+                               @RequestParam(name = "author", required = false) String author,
+                               @RequestParam(name = "email", required = false) String email,
+                               @RequestParam(name = "url", required = false) String url,
+                               @RequestParam(name = "content", required = true) String content,
+                               @RequestParam(name = "csrf_token", required = true) String csrf_token
+    ) {
+
+        String ref = request.getHeader("Referer");
+        if (StringUtils.isBlank(ref) || StringUtils.isBlank(csrf_token)){
+            return APIResponse.fail("访问失败");
+        }
+
+        String token = cache.hget(Types.CSRF_TOKEN.getType(), csrf_token);
+        if (StringUtils.isBlank(token)) {
+            return APIResponse.fail("访问失败");
+        }
+
+        if (null == couid || StringUtils.isBlank(content)) {
+            return APIResponse.fail("请输入完整后评论");
+        }
+
+        if (StringUtils.isNotBlank(author) && author.length() > 50) {
+            return APIResponse.fail("姓名过长");
+        }
+
+        if (StringUtils.isNotBlank(email) && !TaleUtils.isEmail(email)) {
+            return APIResponse.fail("请输入正确的邮箱格式");
+        }
+
+        if (StringUtils.isNotBlank(url) && !TaleUtils.isURL(url)) {
+            return APIResponse.fail("请输入正确的网址格式");
+        }
+
+        if (content.length() > 200 || content.length() < 5) {
+            return APIResponse.fail("请输入5~200个字符的评价");
+        }
+
+        String val = IPKit.getIpAddressByRequest1(request) + ":" + couid;
+        Integer count = cache.hget(Types.COMMENTS_FREQUENCY.getType(), val);
+        if (null != count && count > 0) {
+            return APIResponse.fail("您发表的评论太快了，请过会再试");
+        }
+
+        author = TaleUtils.cleanXSS(author);
+        content = TaleUtils.cleanXSS(content);
+
+        author = EmojiParser.parseToAliases(author);
+        content = EmojiParser.parseToAliases(content);
+
+
+        CoursementDomain coursements = new CoursementDomain();
+        coursements.setAuthor(author);
+        coursements.setCouid(couid);
+        coursements.setIp(request.getRemoteAddr());
+        coursements.setUrl(url);
+        coursements.setContent(content);
+        coursements.setEmail(email);
+        coursements.setParent(coid);
+
+        try {
+            coursementService.addCoursement(coursements);
             cookie("tale_remember_author", URLEncoder.encode(author,"UTF-8"), 7 * 24 * 60 * 60, response);
             cookie("tale_remember_mail", URLEncoder.encode(email,"UTF-8"), 7 * 24 * 60 * 60, response);
             if (StringUtils.isNotBlank(url)) {

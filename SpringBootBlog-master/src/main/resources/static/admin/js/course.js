@@ -23,7 +23,7 @@ $(".select2").select2({
 var tale = new $.tale();
 
 /**
- * 保存文章
+ * 保存教程
  * @param status
  */
 function subCourse(status) {
@@ -43,7 +43,7 @@ function subCourse(status) {
     $("#articleForm #type").val($('#multiple-type').val());
     var params = $("#articleForm").serialize();
     console.log(params);
-    var url = $('#articleForm #coid').val() != '' ? '/admin/course/modifyCourser' : '/admin/course/publish';
+    var url = $('#articleForm #couid').val() != '' ? '/admin/course/modifyCourser' : '/admin/course/publish';
     tale.post({
         url:url,
         data:params,
